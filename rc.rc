@@ -4,29 +4,29 @@ FLAGA BITMAP "flaga.bmp"
 MINA BITMAP "mina.bmp"
 
 Niest DIALOG 100, 100, 200, 100
-CAPTION "Poziom niestandardowy.."
+CAPTION "Custom level..."
 STYLE WS_VISIBLE | WS_CAPTION | DS_MODALFRAME
 FONT 8,"Helv"
 BEGIN
      ICON "Ikona", 2200,5,0
-     LTEXT "Szerokoœæ planszy :"	,2100,5,25,70,10
-     LTEXT "Wysokoœæ :"			,2101,5,45,70,10
-     LTEXT "Iloœæ warstw :"		,2102,5,65,70,10
-     LTEXT "Iloœæ min :"			,2103,5,85,70,10
+     LTEXT "Board width :"	,2100,5,25,70,10
+     LTEXT "Board height :"			,2101,5,45,70,10
+     LTEXT "Number of layers :"		,2102,5,65,70,10
+     LTEXT "Amount of mines :"			,2103,5,85,70,10
      EDITTEXT 						 2001,75,25,50,10
      EDITTEXT						 2002,75,45,50,10
      EDITTEXT 						 2003,75,65,50,10
      EDITTEXT 						 2004,75,85,50,10
      DEFPUSHBUTTON "OK",2005,140,25,50,14
-     DEFPUSHBUTTON "Anuluj",IDCANCEL,140,45,50,14
+     DEFPUSHBUTTON "Cancel",IDCANCEL,140,45,50,14
 END
 
 Wpis DIALOG 100, 100, 200, 45
 STYLE WS_VISIBLE | WS_SYSMENU | WS_POPUP | WS_CAPTION | DS_MODALFRAME   
-CAPTION "Wygra³eœ"
+CAPTION "You win!"
 FONT 8,"Helv"
 BEGIN
-     LTEXT "Podaj swoje imiê :",5001,10,10,100,30
+     LTEXT "Enter your name :",5001,10,10,100,30
      EDITTEXT 5000,75,10,100,12
      DEFPUSHBUTTON "OK"                    ,  IDOK,   75,28,50,14
 END
@@ -36,19 +36,19 @@ STYLE WS_VISIBLE | WS_CAPTION | DS_MODALFRAME
 CAPTION "Saper 3D"
 FONT 9,"Helv"
 BEGIN
-     CTEXT "Saper 3D\n\nautor: �ukasz Majchrzycki\nwersja: beta"      ,  3000,   0,5,120,40
+     CTEXT "Saper 3D\n\nauthor: �ukasz Majchrzycki\nversion: 0.1 beta"      ,  3000,   0,5,120,40
      ICON "Ikona" , 2200,5,0
      DEFPUSHBUTTON "OK"                                    ,  IDOK,   35,45,50,14
 END
 
 Wyniki DIALOG 100, 100, 250, 100
 STYLE WS_VISIBLE | WS_CAPTION | DS_MODALFRAME
-CAPTION "Najlepsze wyniki"
+CAPTION "Best results"
 FONT 8,"Helv"
 BEGIN
      ICON "Ikona"                          ,  4000,   5,0
      DEFPUSHBUTTON "OK"                    ,  IDOK,   75,80,50,14
-     DEFPUSHBUTTON "Resetuj wyniki"        ,  4002,   15,80,50,14
+     DEFPUSHBUTTON "Reset results"        ,  4002,   15,80,50,14
 END
 
 Accel ACCELERATORS
@@ -63,26 +63,24 @@ END
 
 MENU1 MENU
 BEGIN
-        POPUP "&Gra"
+        POPUP "&Game"
         BEGIN
-                MENUITEM "Nowa\tF2", 1001
+                MENUITEM "New game\tF2", 1001
                 MENUITEM SEPARATOR
-                MENUITEM "Pocz¹tkuj¹cy\tF3", 1100
-                MENUITEM "Œredniozaawansowany\tF4", 1101
-                MENUITEM "Zaawansowany\tF5", 1102
+                MENUITEM "Becinner\tF3", 1100
+                MENUITEM "Intermediate\tF4", 1101
+                MENUITEM "Advanced\tF5", 1102
                 MENUITEM "Ekspert\tF6", 1103
-                MENUITEM "Niestandardowy...\tF10",1104
+                MENUITEM "Custom level...\tF10",1104
                 MENUITEM SEPARATOR
-                MENUITEM "Najlepsze wyniki",1105
+                MENUITEM "Best results",1105
                 MENUITEM SEPARATOR
-                MENUITEM "Wyjœcie", 1002
+                MENUITEM "Exit", 1002
         END
 
-        POPUP "&Pomoc"
+        POPUP "&Help"
         BEGIN
-             MENUITEM "Pomoc", 1010
-             MENUITEM SEPARATOR
-             MENUITEM "O programie", 1011
+             MENUITEM "About Saper 3D", 1011
         END
 
 END

@@ -4,8 +4,7 @@
 #include <stdio.h>
 
 HDC hdc,mem,hdc2;
-static HGLRC hrc;
-static HWND hwnd,but_hwnd[300],pas_hwnd,ramka_hwnd,dialog;
+static HWND hwnd,but_hwnd[300],pas_hwnd,ramka_hwnd;
 HBITMAP flaga,mina;
 HINSTANCE gl;
 HACCEL haccel;
@@ -14,12 +13,12 @@ RECT rect;
 UINT timer;
 POINT mysz,mysz2;
 
-//****poziomy
+//****levels
 int ppx=4,ppy=4,ppz=3,ppm=4;
 int psx=5,psy=5,psz=5,psm=10;
 int pzx=7,pzy=7,pzz=5,pzm=25;
 int pex=10,pey=10,pez=5,pem=50;
-//****koniec poziomów
+//****levels end
 
 int wys=570,szer=550;
 int x=ppx,y=ppy,z=ppz,nr,nr2,max_min=ppm;
@@ -48,27 +47,11 @@ BOOL CALLBACK wpis_kom(HWND, UINT, WPARAM,LPARAM);
 
 void wynik()
 {
-/*HANDLE hExe,hUpdateRes;
-HRSRC hRes;
-
-hExe = LoadLibrary("Saper.exe");
-
-hUpdateRes = BeginUpdateResource("Saper.exe", 1);
-//hRes = FindResource(hExe, MAKEINTRESOURCE(4001), RT_STRING);
-
-char *lpResLock="Majcher";
- if(!UpdateResource(hUpdateRes,RT_STRING,MAKEINTRESOURCE(4001),
-                    MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),
-                    lpResLock,100)  )
-                    MessageBox(NULL, "NULL", "Saper",MB_OK);
-
-EndUpdateResource(hUpdateRes, FALSE);*/
-
 DWORD i,j,k;
 int q=0,c;
 char n[5];
 HANDLE plik;
-  plik=CreateFile("saper.lib",
+  plik=CreateFile("saper.bin",
               GENERIC_READ|GENERIC_WRITE,
               0,
               0,
@@ -80,7 +63,7 @@ HANDLE plik;
 ReadFile(plik,str,120,&i,NULL);
 if(i!=120)
 {
-   sprintf(str,"9999s.          Nikt         *9999s.          Nikt         *9999s.          Nikt         *9999s.          Nikt         *");
+   sprintf(str,"9999s.          Nobody       *9999s.          Nobody       *9999s.          Nobody       *9999s.          Nobody       *");
    WriteFile(plik,str,120,&i,0);
 }
 CloseHandle(plik);
@@ -127,8 +110,6 @@ void flagi(int q)
 {
  int i,j,k;
  DWORD styl;
-
-
 
  if(pos==1)j=x*y;
  else j=0;
@@ -226,7 +207,6 @@ void zlicz(int x1,int y1,int z1)
         j=2*x*y;
         for(i=x*y;i<j;i++)
          EnableWindow(*(but_hwnd+i),0);
-       // MessageBox(NULL, "WYGRA£EŒ!!!", "Saper",MB_OK);
         wynik();
         return;
      }
@@ -265,11 +245,11 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,PSTR szCmdLine,in
 
  if(!RegisterClass(&okno))
  {
-  MessageBox(NULL,"Nie uda³o siê zarejestrowaæ klasy okna1","B£¥D",MB_ICONERROR);
+  MessageBox(NULL,"Unable to register Window","Error",MB_ICONERROR);
  }
 
  hwnd=CreateWindow("okienko",
-				   "Saper 3D   # by Majcher",
+				   "Saper 3D",
 	               WS_VISIBLE | WS_SYSMENU | WS_POPUP | WS_CAPTION | WS_MINIMIZEBOX,            // styl okna
    				  100,0,  // pocz¹tkowa pozycja x,y
 	               szer,wys,  // pocz¹tkowy rozmiar x,y
@@ -362,8 +342,6 @@ switch(message)
   break;
 
 
-
-
   case WM_KEYDOWN:
   if(wParam==VK_CONTROL)
   {
@@ -421,14 +399,14 @@ switch(message)
 
   case WM_PAINT:
    hdc=BeginPaint(hwnd,&ps);
-   sprintf(str,"Warstwa : %d / %d",pos,z);
+   sprintf(str,"Layer no. : %d / %d",pos,z);
    SetBkMode(hdc,TRANSPARENT);
    TextOut(hdc,30,250+sty,str,strlen(str));
 
-   sprintf(str,"Czas : %ds",czas);
+   sprintf(str,"Time : %ds",czas);
    TextOut(hdc,15,15,str,strlen(str));
 
-   sprintf(str,"Pozosta³o %d min",poz_min);
+   sprintf(str,"Remain %d mines",poz_min);
    TextOut(hdc,szer-150,15,str,strlen(str));
 
    EndPaint(hwnd,&ps);
@@ -455,7 +433,6 @@ switch(message)
     j=2*x*y;
     for(i=x*y;i<j;i++)
      EnableWindow(*(but_hwnd+i),0);
-//    MessageBox(NULL, "BUUUUM!!!!!", "Saper",MB_OK);
     flagi(0);
 
 
@@ -470,15 +447,6 @@ switch(message)
   {
    k=(wParam-100)%y;
    zlicz( ((wParam-100-k)/y), k, pos-1);
-  /* *(pl+(pos-1)*x*y+wParam-100)=q;
-   if(q!=0)
-   {
-    sprintf(str,"%d",q);
-
-  //  CrateFontIndirect(15,5,0,0,400,0,0,0,0,0,0,0,0,"Arial");
-
-    SetWindowText(*(but_hwnd+wParam-100+x*y),str);
-   } */
    }
    else { flaga1(wParam-100+x*y); break; }
 
@@ -487,7 +455,7 @@ switch(message)
   {
    switch(LOWORD(wParam))
    {
-    case 1001:                  //gra-nowa
+    case 1001:                  //new game
      KillTimer(hwnd,timer);
      ok=1;
      ruch=0;
@@ -529,13 +497,13 @@ switch(message)
      }
     break;
 
-    case 1002:                 //gra-wyjœcie
+    case 1002:                 //exit
      DeleteObject(flaga);
      KillTimer(hwnd,timer);
      PostQuitMessage(0);
     break;
 
-    case 1100:        //pocz¹tkuj¹cy
+    case 1100:        //beginner
      x1=ppx;
      y1=ppy;
      z1=ppz;
@@ -544,7 +512,7 @@ switch(message)
      SendMessage(hwnd,WM_COMMAND,1001,0);
     break;
 
-    case 1101:        //Œredniozaawansowany
+    case 1101:        //intermediate
      x1=psx;
      y1=psy;
      z1=psz;
@@ -553,7 +521,7 @@ switch(message)
      SendMessage(hwnd,WM_COMMAND,1001,0);
     break;
 
-    case 1102:       //Zaawansowany
+    case 1102:       //advanced
      x1=pzx;
      y1=pzy;
      z1=pzz;
@@ -562,7 +530,7 @@ switch(message)
      SendMessage(hwnd,WM_COMMAND,1001,0);
     break;
 
-    case 1103:      //Ekspert
+    case 1103:      //expert
      x1=pex;
      y1=pey;
      z1=pez;
@@ -575,11 +543,11 @@ switch(message)
      if(DialogBox(gl,"Niest",hwnd,niest_kom)) SendMessage(hwnd,WM_COMMAND,1001,0);
     break;
 
-    case 1011:     //O programie
+    case 1011:     //about Saper
      DialogBox(gl,"Oprog",hwnd,oprog_kom);
     break;
 
-    case 1105:     //Najlepsze wyniki
+    case 1105:     //best results
      DialogBox(gl,"Wyniki",hwnd,wyniki_kom);
     break;
    }
@@ -821,13 +789,14 @@ switch(iMsg)
     stx=150-x1*rozm;
     EndDialog(hDlg,1);
    return 1;
-   }      
+   }
 //////////////////////
    case IDCANCEL:
     EndDialog(hDlg,0);
    return 1;
   default: return 0;
   }
+		break;
   default: return 0;
  }
 }
@@ -855,22 +824,19 @@ BOOL CALLBACK wyniki_kom(HWND hDlg, UINT iMsg, WPARAM wParam,LPARAM lParam)
   {
   DWORD i;
       HANDLE plik;
-      plik=CreateFile("saper.lib",
+      plik=CreateFile("saper.bin",
               GENERIC_READ|GENERIC_WRITE,
               0,
               0,
               OPEN_ALWAYS,
               FILE_ATTRIBUTE_ARCHIVE,
               0);
-   sprintf(str,"9999s.          Nikt         *9999s.          Nikt         *9999s.          Nikt         *9999s.          Nikt         *");
+      sprintf(str,"9999s.          Nobody       *9999s.          Nobody       *9999s.          Nobody       *9999s.          Nobody       *");
    WriteFile(plik,str,120,&i,0);
    CloseHandle(plik);
 
    SendMessage(hDlg,WM_INITDIALOG,0,0);
-   //InvalidateRect(hDlg,NULL,TRUE);
    SendMessage(hDlg,DM_REPOSITION ,0,0);
-//   RedrawWindow(hDlg,NULL,NULL,RDW_INVALIDATE);
-//   RedrawWindow(hDlg,NULL,NULL,RDW_VALIDATE);
    EndDialog(hDlg,0);
 
 
@@ -881,21 +847,20 @@ BOOL CALLBACK wyniki_kom(HWND hDlg, UINT iMsg, WPARAM wParam,LPARAM lParam)
    hdc2=GetDC(hDlg);
     SetBkMode(hdc2,TRANSPARENT);
     SelectObject(hdc2,CreateFont(8,4,0,0,400,0,0,0,0,0,0,0,0,"Helv"));
-    sprintf(str,"Pocz¹tkuj¹cy :");
+    sprintf(str,"Beginner :");
     TextOut(hdc2,30,40,str,strlen(str));
-    sprintf(str,"Œredniozaawansowany :");
+    sprintf(str,"Intermediate :");
     TextOut(hdc2,30,60,str,strlen(str));
-    sprintf(str,"Zaawansowany :");
+    sprintf(str,"Advanced :");
     TextOut(hdc2,30,80,str,strlen(str));
     sprintf(str,"Expert :");
     TextOut(hdc2,30,100,str,strlen(str));
-//    sprintf(str,"Niestandardowy:");
-//    TextOut(hdc2,30,120,str,strlen(str));
+
     TextOut(hdc2,160,40,t_wynik[0],strlen(t_wynik[0]));
     TextOut(hdc2,160,60,t_wynik[1],strlen(t_wynik[1]));
     TextOut(hdc2,160,80,t_wynik[2],strlen(t_wynik[2]));
     TextOut(hdc2,160,100,t_wynik[3],strlen(t_wynik[3]));
-//    TextOut(hdc2,160,120,t_wynik[4],strlen(t_wynik[4]));
+
    ReleaseDC(hDlg,hdc2);
   return 0;
 
@@ -903,10 +868,13 @@ BOOL CALLBACK wyniki_kom(HWND hDlg, UINT iMsg, WPARAM wParam,LPARAM lParam)
   {
    HANDLE h;
    DWORD i,j,k,l=0,m=0;
-   h=CreateFile("saper.lib",GENERIC_READ|GENERIC_WRITE,0,0,OPEN_ALWAYS,FILE_ATTRIBUTE_ARCHIVE,0);
+   h=CreateFile("saper.bin",GENERIC_READ|GENERIC_WRITE,0,0,OPEN_ALWAYS,FILE_ATTRIBUTE_ARCHIVE,0);
    ReadFile(h,str2,120,&i,NULL);
    CloseHandle(h);
-   if(i!=120)   SendMessage(hDlg,WM_COMMAND,4002,0);
+
+   if(i!=120)
+   	   SendMessage(hDlg,WM_COMMAND,4002,0);
+
    for(j=0;j<=i;j++)
     {
      if(*(str2+j)=='*')
@@ -947,9 +915,9 @@ BOOL CALLBACK wpis_kom(HWND hDlg, UINT iMsg, WPARAM wParam,LPARAM lParam)
    ClientToScreen(hDlg,&po);
    okno=WindowFromPoint(po);
    dl=GetWindowTextLength(okno);
-   if(dl>13) {  MessageBox(NULL, "Imiê jest zbyt d³ugie", "Saper",MB_OK); return 1; }
+   if(dl>13) {  MessageBox(NULL, "Name is too long!", "Saper 3D",MB_OK); return 1; }
    GetWindowText(okno,str2,dl+1);
-   plik=CreateFile("saper.lib",
+   plik=CreateFile("saper.bin",
               GENERIC_READ|GENERIC_WRITE,
               0,
               0,
@@ -977,8 +945,6 @@ BOOL CALLBACK wpis_kom(HWND hDlg, UINT iMsg, WPARAM wParam,LPARAM lParam)
 
   for(;j<12;j++,i++)
       *(str+i)=' ';
-
-  // MessageBox(NULL, str, "Saper",MB_OK);
 
    WriteFile(plik,str,120,&i,0);
    CloseHandle(plik);
